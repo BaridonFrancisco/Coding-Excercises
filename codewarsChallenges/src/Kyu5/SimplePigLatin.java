@@ -49,7 +49,6 @@ public class SimplePigLatin {
 
         String[] words = str.split("\\s+");
         StringBuilder result = new StringBuilder();
-
         for (String word : words) {
             if (word.matches("\\w+")) {
                 String transformedWord = word.replaceFirst("(\\w)(\\w*)", "$2$1ay");
