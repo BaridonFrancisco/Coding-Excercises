@@ -30,6 +30,12 @@ public class Main {
             .max(Integer::compareTo)
             .orElse(0);
 
+    static  Function<List<Integer>,Integer>numberMin= list->list
+            .stream()
+            .sorted(Integer::compareTo)
+            .min(Comparator.naturalOrder())
+            .orElse(0);
+
     public static void main(String[] args) {
 
         List<Integer>intergers=new ArrayList<>();
@@ -57,13 +63,28 @@ public class Main {
 
         var listNums=generateListNums(10);
         System.out.println(listNums);
+
+
+
         Integer max=numberMax.apply(listNums);
         System.out.println("el maximo de la lista es "+max);
 
-       /* int [] arr=new int[]{1,5,64,21,5,0};
-        System.out.println(getMax(arr));*/
+        Integer min=numberMin.apply(listNums);
+        System.out.println("el minimo es "+min);
+
+        List<Integer>listaNums=new ArrayList<>();
+        listaNums.add(232);
+        listaNums.add(21);
+        listaNums.add(900);
+        listaNums.add(121);
+        listaNums.add(4);
+        listaNums.add(1220);
+        System.out.println(numberMin.apply(listaNums));
 
 
+           int [] arr=new int[]{1,5,64,21,-5,0};
+        System.out.println(getMax(arr));
+        System.out.println(getMin(arr));
 
     }
 
@@ -84,7 +105,7 @@ public class Main {
 
     private static List<Integer> generateListNums(final long size) {
         var list= Stream.iterate(1, (a) -> {
-                    Integer numRandom=new Random().nextInt(1, 5);
+                    Integer numRandom=new Random().nextInt(1, 24);
                     System.out.println("el valor inicial de la semilla es "+ (a));
                     System.out.println("el valor ramdom es "+ (numRandom));
                     System.out.println("la suma de a + aleatorio "+ (a+numRandom));
@@ -107,6 +128,16 @@ public class Main {
         }
         return max;
 
+    }
+    public static int getMin(int [] arr){
+        int min= Integer.MAX_VALUE;
+
+        for(int i=0;i<arr.length;i++){
+            if(min>arr[i]){
+                min=arr[i];
+            }
+        }
+        return arr.length==0?0:min;
     }
 
 
