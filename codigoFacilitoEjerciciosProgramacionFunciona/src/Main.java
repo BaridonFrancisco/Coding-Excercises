@@ -1,27 +1,34 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Main {
 
     /*
 
-    Crear una función anónima que nos permita calcular el promedio de un arreglo de números enteros.
-    Crear una función anónima que calcule el factorial dado un número entero.
-    Crear una función anónima que permita conocer si un número es par.
-    Dado un arreglo de números enteros, crear una función anónima que retorne el número mayor.
-    Dado un arreglo de números enteros, crear una función anónima que retorne el número menor.
-    Dado un arreglo de números enteros, crear una función anónima que retorne el número que más se repite.
-    Crear una función anónima que reciba como parámetro 3 numeros enteros. La función retorna el número mayor.
-    Crear una función anónima que reciba dos parámetros, un string y un numero entero. La función retorna un string el cual será el resultado de multiplicar ambos parámetros.*/
+    1. Crear una función anónima que nos permita calcular el promedio de un arreglo de números enteros.
+    2. Crear una función anónima que calcule el factorial dado un número entero.
+    3. Crear una función anónima que permita conocer si un número es par.
+    4. Dado un arreglo de números enteros, crear una función anónima que retorne el número mayor.
+    5. Dado un arreglo de números enteros, crear una función anónima que retorne el número menor.
+    6. Dado un arreglo de números enteros, crear una función anónima que retorne el número que más se repite.
+    7. Crear una función anónima que reciba como parámetro 3 numeros enteros. La función retorna el número mayor.
+    8. Crear una función anónima que reciba dos parámetros, un string y un número entero. La función retorna un string el cual será el resultado de multiplicar ambos parámetros.
+
+    */
+
+
 
     static final Function<Integer,String> IsPair=(number)->{
         if(number%2==0)return "pair";
         return "odd";
     };
-    
+
+    static final Function<List<Integer>,Integer>numberMax=(list)->list.stream()
+            .max(Integer::compareTo)
+            .orElse(0);
 
     public static void main(String[] args) {
 
@@ -48,6 +55,16 @@ public class Main {
         System.out.println(factorial(5));
         System.out.println(IsPair.apply(12));
 
+        var listNums=generateListNums(10);
+        System.out.println(listNums);
+        Integer max=numberMax.apply(listNums);
+        System.out.println("el maximo de la lista es "+max);
+
+       /* int [] arr=new int[]{1,5,64,21,5,0};
+        System.out.println(getMax(arr));*/
+
+
+
     }
 
 
@@ -56,11 +73,40 @@ public class Main {
                 .mapMultiToDouble((element, doubleConsumer) -> doubleConsumer.accept(element.doubleValue()))
                 .average()
                 .orElse(0.0);
+
     }
 
     public static int factorial(int n){
        return IntStream.range(1,n+1)
                 .reduce(1,(a,b)->a*b);
+    }
+
+
+    private static List<Integer> generateListNums(final long size) {
+        var list= Stream.iterate(1, (a) -> {
+                    Integer numRandom=new Random().nextInt(1, 5);
+                    System.out.println("el valor inicial de la semilla es "+ (a));
+                    System.out.println("el valor ramdom es "+ (numRandom));
+                    System.out.println("la suma de a + aleatorio "+ (a+numRandom));
+                    return numRandom + a;
+                })
+                .limit(size)
+                .collect(Collectors.toList());
+        Collections.shuffle(list);
+        return list;
+
+    }
+
+    public static int getMax(int [] nums){
+        int max=0;
+        // 20 1 5
+        for(int i=0;i<nums.length;i++){
+            if(max<nums[i]){
+                max=nums[i];
+            }
+        }
+        return max;
+
     }
 
 
