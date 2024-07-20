@@ -20,17 +20,16 @@ public class Main {
     */
 
 
-
-    static final Function<Integer,String> IsPair=(number)->{
-        if(number%2==0)return "pair";
+    static final Function<Integer, String> IsPair = (number) -> {
+        if (number % 2 == 0) return "pair";
         return "odd";
     };
 
-    static final Function<List<Integer>,Integer>numberMax=(list)->list.stream()
+    static final Function<List<Integer>, Integer> numberMax = (list) -> list.stream()
             .max(Integer::compareTo)
             .orElse(0);
 
-    static  Function<List<Integer>,Integer>numberMin= list->list
+    static Function<List<Integer>, Integer> numberMin = list -> list
             .stream()
             .sorted(Integer::compareTo)
             .min(Comparator.naturalOrder())
@@ -38,41 +37,40 @@ public class Main {
 
     public static void main(String[] args) {
 
-        List<Integer>intergers=new ArrayList<>();
-        List<Float>floats=new ArrayList<>();
+        List<Integer> intergers = new ArrayList<>();
+        List<Float> floats = new ArrayList<>();
 
-        float sum=0.0f;
-        for (int i=0;i<10;i++){
-            int n= new Random().nextInt(1,50);
+        float sum = 0.0f;
+        for (int i = 0; i < 10; i++) {
+            int n = new Random().nextInt(1, 50);
             intergers.add(n);
-            sum+= (float)n;
+            sum += (float) n;
         }
-        System.out.println(sum/intergers.size());
+        System.out.println(sum / intergers.size());
 
-        var re= average(intergers,Double.class);
+        var re = average(intergers, Double.class);
         System.out.println(re);
 
         floats.add(5.5f);
         floats.add(5.5f);
         floats.add(15.7f);
-        System.out.println((5.5+5.5+15.7)/3.0);
-        System.out.println(average(floats,Double.class));
+        System.out.println((5.5 + 5.5 + 15.7) / 3.0);
+        System.out.println(average(floats, Double.class));
 
         System.out.println(factorial(5));
         System.out.println(IsPair.apply(12));
 
-        var listNums=generateListNums(10);
+        var listNums = generateListNums(10);
         System.out.println(listNums);
 
 
+        Integer max = numberMax.apply(listNums);
+        System.out.println("el maximo de la lista es " + max);
 
-        Integer max=numberMax.apply(listNums);
-        System.out.println("el maximo de la lista es "+max);
+        Integer min = numberMin.apply(listNums);
+        System.out.println("el minimo es " + min);
 
-        Integer min=numberMin.apply(listNums);
-        System.out.println("el minimo es "+min);
-
-        List<Integer>listaNums=new ArrayList<>();
+        List<Integer> listaNums = new ArrayList<>();
         listaNums.add(232);
         listaNums.add(21);
         listaNums.add(900);
@@ -82,14 +80,19 @@ public class Main {
         System.out.println(numberMin.apply(listaNums));
 
 
-           int [] arr=new int[]{1,5,64,21,-5,0};
+        int[] arr = new int[]{1, 5, 64, 21, -5, 0};
         System.out.println(getMax(arr));
         System.out.println(getMin(arr));
+
+        int [] arr2=new int[]{2,3,41,61,2,3,4,3,3,5,2,5,5,5,5,3,5,5,5};
+
+        count(arr2);
+
 
     }
 
 
-    public static Number average(List<? extends Number> listnumbers,Class<? extends Number>type) {
+    public static Number average(List<? extends Number> listnumbers, Class<? extends Number> type) {
         return listnumbers.stream()
                 .mapMultiToDouble((element, doubleConsumer) -> doubleConsumer.accept(element.doubleValue()))
                 .average()
@@ -97,18 +100,18 @@ public class Main {
 
     }
 
-    public static int factorial(int n){
-       return IntStream.range(1,n+1)
-                .reduce(1,(a,b)->a*b);
+    public static int factorial(int n) {
+        return IntStream.range(1, n + 1)
+                .reduce(1, (a, b) -> a * b);
     }
 
 
     private static List<Integer> generateListNums(final long size) {
-        var list= Stream.iterate(1, (a) -> {
-                    Integer numRandom=new Random().nextInt(1, 24);
-                    System.out.println("el valor inicial de la semilla es "+ (a));
-                    System.out.println("el valor ramdom es "+ (numRandom));
-                    System.out.println("la suma de a + aleatorio "+ (a+numRandom));
+        var list = Stream.iterate(1, (a) -> {
+                    Integer numRandom = new Random().nextInt(1, 24);
+                    System.out.println("el valor inicial de la semilla es " + (a));
+                    System.out.println("el valor ramdom es " + (numRandom));
+                    System.out.println("la suma de a + aleatorio " + (a + numRandom));
                     return numRandom + a;
                 })
                 .limit(size)
@@ -118,29 +121,60 @@ public class Main {
 
     }
 
-    public static int getMax(int [] nums){
-        int max=0;
+    public static void count(int[] arr) {
+        var res = Arrays.stream(arr)
+                .sorted()
+                .boxed()
+                .collect(Collectors.collectingAndThen(
+                        Collectors.groupingBy(Function.identity(), Collectors.counting()),
+                        map -> map.entrySet()
+                                .stream()
+                                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))))
+                .toList();
+        List<Map.Entry<Integer,Long>>result = res.stream()
+                .filter(entry ->
+                        Objects.equals(res.stream().findFirst().orElse(null).getValue(), entry.getValue()))
+                .toList();
+
+        result.forEach(entry-> {
+            if(result.size()==1){
+                System.out.println("El numero que mas se repite es el "+entry.getKey()+" y se repite "+entry.getValue()+" veces");
+                return;
+            }
+            System.out.println("El numero "+entry.getKey()+"  se repite "+entry.getValue()+" veces");
+        });
+
+
+              //  System.out.println("el numero que se repite es " + res.getKey() + " y se repite " + res.getValue());
+
+        //.collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
+        //System.out.println(res);
+
+
+    }
+
+    public static int getMax(int[] nums) {
+        int max = 0;
         // 20 1 5
-        for(int i=0;i<nums.length;i++){
-            if(max<nums[i]){
-                max=nums[i];
+        for (int num : nums) {
+            if (max < num) {
+                max = num;
             }
         }
         return max;
 
     }
-    public static int getMin(int [] arr){
-        int min= Integer.MAX_VALUE;
 
-        for(int i=0;i<arr.length;i++){
-            if(min>arr[i]){
-                min=arr[i];
+    public static int getMin(int[] arr) {
+        int min = Integer.MAX_VALUE;
+
+        for (int j : arr) {
+            if (min > j) {
+                min = j;
             }
         }
-        return arr.length==0?0:min;
+        return arr.length == 0 ? 0 : min;
     }
-
-
 
 
 }
