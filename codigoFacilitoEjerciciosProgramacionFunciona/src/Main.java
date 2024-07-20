@@ -84,9 +84,28 @@ public class Main {
         System.out.println(getMax(arr));
         System.out.println(getMin(arr));
 
-        int [] arr2=new int[]{2,3,41,61,2,3,4,3,3,5,2,5,5,5,5,3,5,5,5};
+        int [] arr2=new int[]{2,3,41,61,2,3,4,3,3,5,2,5,5,5,5,3};
 
-        count(arr2);
+       var result= countNumbers(arr2);
+        result.forEach(entry-> {
+
+            if(result.size()==1){
+                System.out.println("El numero que mas se repite es el "+entry.getKey()+" y se repite "+entry.getValue()+" veces");
+                return;
+            }
+            System.out.println("El numero "+entry.getKey()+"  se repite "+entry.getValue()+" veces");
+        });
+        System.out.println("---");
+        var result2=countNumbers2(arr2);
+        result2.forEach(entry-> {
+
+            if(result2.size()==1){
+                System.out.println("El numero que mas se repite es el "+entry.getKey()+" y se repite "+entry.getValue()+" veces");
+                return;
+            }
+            System.out.println("El numero "+entry.getKey()+"  se repite "+entry.getValue()+" veces");
+        });
+
 
 
     }
@@ -121,9 +140,8 @@ public class Main {
 
     }
 
-    public static void count(int[] arr) {
+    public static List<Map.Entry<Integer,Long>> countNumbers(int[] arr) {
         var res = Arrays.stream(arr)
-                .sorted()
                 .boxed()
                 .collect(Collectors.collectingAndThen(
                         Collectors.groupingBy(Function.identity(), Collectors.counting()),
@@ -131,26 +149,26 @@ public class Main {
                                 .stream()
                                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))))
                 .toList();
-        List<Map.Entry<Integer,Long>>result = res.stream()
+        return res.stream()
                 .filter(entry ->
                         Objects.equals(res.stream().findFirst().orElse(null).getValue(), entry.getValue()))
                 .toList();
+    }
+    // otra manera similar pero mas concisa y legible
+    public static List<Map.Entry<Integer,Long>> countNumbers2(int[]arr){
 
-        result.forEach(entry-> {
-            if(result.size()==1){
-                System.out.println("El numero que mas se repite es el "+entry.getKey()+" y se repite "+entry.getValue()+" veces");
-                return;
-            }
-            System.out.println("El numero "+entry.getKey()+"  se repite "+entry.getValue()+" veces");
-        });
+       Map<Integer,Long>mapNumbers= Arrays.stream(arr)
+                .boxed()
+                .collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
 
+       long maxFrequency=mapNumbers.values().stream()
+               .mapToLong(Long::valueOf)
+               .max()
+               .orElse(0L);
 
-              //  System.out.println("el numero que se repite es " + res.getKey() + " y se repite " + res.getValue());
-
-        //.collect(Collectors.groupingBy(Function.identity(),Collectors.counting()));
-        //System.out.println(res);
-
-
+        return mapNumbers.entrySet().stream()
+               .filter(entry->entry.getValue().equals(maxFrequency))
+               .toList();
     }
 
     public static int getMax(int[] nums) {
