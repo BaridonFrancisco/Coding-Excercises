@@ -4,7 +4,14 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+@FunctionalInterface
+interface MaxVal{
+    int getMax2(int a,int b,int c);
+}
+
+
 public class Main {
+
 
     /*
 
@@ -106,6 +113,14 @@ public class Main {
             System.out.println("El numero "+entry.getKey()+"  se repite "+entry.getValue()+" veces");
         });
 
+       int comparationVal=getMax(1,10,1);
+        System.out.println(comparationVal);
+
+      MaxVal maxVal=(a,b,c)-> Stream.of(a,b,c)
+                .max(Integer::compareTo)
+                .orElse(0);
+      int valorMax=maxVal.getMax2(14,233,-24);
+        System.out.println(valorMax);
 
 
     }
@@ -169,6 +184,13 @@ public class Main {
         return mapNumbers.entrySet().stream()
                .filter(entry->entry.getValue().equals(maxFrequency))
                .toList();
+    }
+
+    public static int getMax(Integer a,Integer b,Integer c){
+      return Stream.of(a,b,c)
+                .mapToInt(Integer::intValue)
+                .max()
+                .orElse(0);
     }
 
     public static int getMax(int[] nums) {
