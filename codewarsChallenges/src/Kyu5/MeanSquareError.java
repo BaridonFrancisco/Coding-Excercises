@@ -26,8 +26,6 @@ public class MeanSquareError {
         int[] c2 = {-1, 0};
 
         System.out.println(solution(c1,c2));
-
-
         int[] d1 = {10, 10};
         int[] d2 = {10, 10};
 
