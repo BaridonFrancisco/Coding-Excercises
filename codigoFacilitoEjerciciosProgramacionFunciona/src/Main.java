@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -16,6 +17,11 @@ public class Main {
     Crear una función anónima que reciba como parámetro 3 numeros enteros. La función retorna el número mayor.
     Crear una función anónima que reciba dos parámetros, un string y un numero entero. La función retorna un string el cual será el resultado de multiplicar ambos parámetros.*/
 
+    static final Function<Integer,String> IsPair=(number)->{
+        if(number%2==0)return "pair";
+        return "odd";
+    };
+    
 
     public static void main(String[] args) {
 
@@ -30,32 +36,34 @@ public class Main {
         }
         System.out.println(sum/intergers.size());
 
-        var re= average(intergers);
+        var re= average(intergers,Double.class);
         System.out.println(re);
 
         floats.add(5.5f);
         floats.add(5.5f);
         floats.add(15.7f);
         System.out.println((5.5+5.5+15.7)/3.0);
-        System.out.println(average(floats));
+        System.out.println(average(floats,Double.class));
 
         System.out.println(factorial(5));
+        System.out.println(IsPair.apply(12));
 
     }
 
-    
-    public static  double average(List<? extends Number> listnumbers){
-          return listnumbers.stream()
-                   .mapMultiToDouble((element, doubleConsumer) -> doubleConsumer.accept(element.doubleValue()))
-                   .average()
-                   .orElse(0.0);
+
+    public static Number average(List<? extends Number> listnumbers,Class<? extends Number>type) {
+        return listnumbers.stream()
+                .mapMultiToDouble((element, doubleConsumer) -> doubleConsumer.accept(element.doubleValue()))
+                .average()
+                .orElse(0.0);
     }
 
     public static int factorial(int n){
        return IntStream.range(1,n+1)
                 .reduce(1,(a,b)->a*b);
-
     }
+
+
 
 
 }
