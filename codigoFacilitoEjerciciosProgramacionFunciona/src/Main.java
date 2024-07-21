@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -42,6 +43,8 @@ public class Main {
             .min(Comparator.naturalOrder())
             .orElse(0);
 
+    static BiFunction<String,Integer,String>concatString= String::repeat;
+
     public static void main(String[] args) {
 
         List<Integer> intergers = new ArrayList<>();
@@ -55,14 +58,14 @@ public class Main {
         }
         System.out.println(sum / intergers.size());
 
-        var re = average(intergers, Double.class);
+        var re = average(intergers);
         System.out.println(re);
 
         floats.add(5.5f);
         floats.add(5.5f);
         floats.add(15.7f);
         System.out.println((5.5 + 5.5 + 15.7) / 3.0);
-        System.out.println(average(floats, Double.class));
+        System.out.println(average(floats));
 
         System.out.println(factorial(5));
         System.out.println(IsPair.apply(12));
@@ -122,11 +125,16 @@ public class Main {
       int valorMax=maxVal.getMax2(14,233,-24);
         System.out.println(valorMax);
 
+        System.out.println(multiStr2("Hola",3));
+        String concatTest=concatString.apply("Hola",3);
+        System.out.println(concatTest);
+        String multistrTest=multiStr("Hola",3);
+        System.out.println(multistrTest);
 
     }
 
 
-    public static Number average(List<? extends Number> listnumbers, Class<? extends Number> type) {
+    public static Number average(List<? extends Number> listnumbers) {
         return listnumbers.stream()
                 .mapMultiToDouble((element, doubleConsumer) -> doubleConsumer.accept(element.doubleValue()))
                 .average()
@@ -191,6 +199,18 @@ public class Main {
                 .mapToInt(Integer::intValue)
                 .max()
                 .orElse(0);
+    }
+    //Declarativa
+    public static String multiStr(String str, int n){
+       return Stream.of(str)
+                .map(string -> string.repeat(n))
+                .collect(Collectors.joining());
+
+    }
+    //imperativa
+    public static String multiStr2(String str,int n){
+        return str.repeat(n);
+
     }
 
     public static int getMax(int[] nums) {
